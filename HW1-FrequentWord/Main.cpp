@@ -3,9 +3,15 @@
 #include <string>
 using namespace std;
 
-vector<string> FrequentWord(vector<string> sample, int wordlengh) {
+vector<string> FrequentWord(string textSample, int wordlengh) {
+
+
+}
+
+void testall() {
+
 }
 
 int main() {
-
+	testall();
 }
