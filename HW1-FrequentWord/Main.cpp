@@ -6,23 +6,26 @@
 #include <regex>
 #include <cctype>
 #include <limits>
+#include <fstream>
+#include "strFreqSet.h"
+
 //#include <stdlib.h>
 
 using namespace std;
 
-struct WordFreq {
-	int freq;
-	string word;
-};
+//  [[Rcpp::export]]
+void OriginWraper(string s) {
+
+}
+//  [[Rcpp::export]]
+void FreqWrapper(string s) {
+	
+}
 
 string removePunc(string str) {
-
-	// .!?
 	for (string::iterator itr = str.begin(); itr != str.end(); ++itr) {
-		if (isupper(*itr)) {
-			*itr = tolower(*itr);
-		}
-		if (*itr == '.' || *itr == '?' || *itr == '!' || *itr == '-' || *itr == ',') {
+
+		if (*itr == '.' || *itr == '?' || *itr == '!' || *itr == '-' || *itr == ',' || *itr == '\'' ) {
 			string::iterator itr1 = itr;
 			if ((++itr1) == str.end()) {
 				str.erase(itr);
@@ -31,20 +34,20 @@ string removePunc(string str) {
 			str.erase(itr);
 
 		}
+		else if (isupper(*itr)) {
+			*itr = tolower(*itr);
+		}
 	}
 	return str;
 }
 
-vector<WordFreq> StringtoWords(string str) {
-	vector<WordFreq> freq = vector<WordFreq>();
+vector<string> StringtoWords(string str) {
+	vector<string> freq = vector<string>();
 	for (size_t s = 0; s < str.length(); s++) {
 		for (size_t e = s; e < str.length(); e++) {
 			char cur = str[e];
 			if (cur == ' ') {
-				WordFreq temp;
-				temp.freq = 0;
-				temp.word = str.substr(s, e - s);
-				freq.push_back( temp );
+				freq.push_back(str.substr(s, e - s) );
 				s = e+1;
 			}
 		}
@@ -52,43 +55,54 @@ vector<WordFreq> StringtoWords(string str) {
 	return freq;
 }
 
-vector<WordFreq> FrequentWords(string text, int wordlen) {
-	string clnText = removePunc(text);
-	vector<WordFreq> words = StringtoWords(clnText);
+vector<string> FrequentWords(string filename, int wordlen) {
+	fstream iFile;
+	string l;
+	string Lines;
+	iFile.open(filename, ifstream::in);
+	if (iFile.is_open()) {
+		while (!iFile.eof()) {
+			getline(iFile, l);
+			Lines = Lines + " " + l;
+		}
+	}
+	iFile.close();
+	vector<string> words = StringtoWords(removePunc(Lines));
+	StringFSet frequency = StringFSet();
 	string len;
 	stringstream strS;
 	strS << wordlen;
 	len = strS.str();
 	//regex r("[a-zA-Z]{2}");
 	regex r("[a-zA-Z]{" + len + "}");
-	for (vector<WordFreq>::iterator itr = words.begin(); itr != words.end(); ++itr) {
-		bool match = regex_match(itr->word, r);
+	for (vector<string>::iterator itr = words.begin(); itr != words.end(); ++itr) {
+		bool match = regex_match(*itr, r);
 		if (match) {
-			itr->freq++;
+			frequency.add(*itr);
 		}
 	}
-	vector<WordFreq> highestFreq = vector<WordFreq>();
-	int highest = 0;
-	for (vector<WordFreq>::iterator itr = words.begin(); itr != words.end(); ++itr) {
-		if (itr->freq > highest) {
-			highest = itr->freq;
-			highestFreq.clear();
-			highestFreq.push_back(*itr);
-		}
-		else if (itr->freq == highest) {
-			highestFreq.push_back( *itr );
-		}
-	}
-	return highestFreq;
+	return frequency.mostFreq();
 }
 
-size_t FindOrigin(string DNA){
+size_t FindOrigin(string filename){
+	fstream iFile;
+	string l;
+	string Lines;
+	iFile.open(filename, ifstream::in);
+	if (iFile.is_open()) {
+		while (!iFile.eof()) {
+			getline(iFile, l);
+			Lines = Lines + l;
+		}
+	}
+	iFile.close();
+
 	size_t Cnum = 0, Gnum = 0;
-	int Clow = 0, GHigh = 0;
-	size_t CLowIndex = numeric_limits<size_t>::max() , GHighIndex = 0;
+	int Clow = numeric_limits<int>::max(), GHigh = numeric_limits<int>::min();
+	size_t CLowIndex = 0 , GHighIndex = 0;
 	char cur;
-	for (size_t i = 0; i < DNA.length(); i++) {
-		cur = DNA[i];
+	for (size_t i = 0; i < Lines.length(); i++) {
+		cur = Lines[i];
 		if (cur == 'c' || cur == 'C') {
 			Cnum++;
 		}
@@ -109,18 +123,70 @@ size_t FindOrigin(string DNA){
 }
 
 void testall() {
-	/*
-	string s = "Welcome to the unofficial encyclopedia for Virtual Villagers the puzzling video game series created by Last Day of Work. This wiki currently has 1,877 pages, and 153 articles. The series consists of five games in which you have to help a group of villagers survive on the mysterious island of Isola. Along the way, you will solve interesting puzzles that will test your mind-whether it be harvesting food, breeding, or creating shelter-and learn different skills in order to survive!";
-	vector<WordFreq> most;
-	most = FrequentWords(s, 9);
-	for (vector<WordFreq>::iterator itr = most.begin(); itr != most.end(); ++itr) {
-		cout << itr->word << ", ";
-	}*/
-	cout << endl;
-	string dna = "aatgatgatgacgtcaaaaggatccggataaaacatggtgattgcctcgcataacgcggtatgaaaatggattgaagcccgggccgtggattctactcaactttgtcggcttgagaaagacctgggatcctgggtattaaaaagaagatctatttatttagagatctgttctattgtgatctcttattaggatcgcactgccctgtggataacaaggatccggcttttaagatcaacaacctggaaaggatcattaactgtgaatgatcggtgatcctggaccgtataagctgggatcagaatgaggggttatacacaactcaaaaactgaacaacagttgttctttggataactaccggttgatccaagcttcctgacagagttatccacagtagatcgcacgatctgtatacttatttgagtaaattaacccacgatcccagccattcttctgccggatcttccggaatgtcgtgatcaagaatgttgatcttcagtg";
-	cout << "origin index: " <<FindOrigin(dna) << endl;
 
-}
+	//testiing Word Frequency
+	//test 1;
+	vector<string> most = FrequentWords("FreqWordTest1.txt", 2);
+	cout << "Test 1" << endl;
+	cout << "Correct Answer:" << endl;
+	cout << "\tmost Common word(s): \"he\"" << endl ;
+	for (vector<string>::iterator itr = most.begin(); itr != most.end(); ++itr) {
+		cout << *itr << ", ";
+	}
+	cout << endl;
+
+	//test 2
+	most = FrequentWords("FreqWordTest2.txt", 3);
+	cout << "Test 2" << endl;
+	cout << "Correct Answer:" << endl;
+	cout << "\tmost Common word(s): \"the\"" << endl;
+	for (vector<string>::iterator itr = most.begin(); itr != most.end(); ++itr) {
+		cout << *itr << ", ";
+	}
+	cout << endl;
+	//test 3
+	most = FrequentWords("FreqWordTest3.txt", 4);
+	cout << "Test 3" << endl;
+	cout << "Correct Answer:" << endl;
+	cout << "\tmost Common word(s): \"loud\"" << endl;
+	for (vector<string>::iterator itr = most.begin(); itr != most.end(); ++itr) {
+		cout << *itr << ", ";
+	}
+	cout << endl;
+	//test 4
+	most = FrequentWords("FreqWordTest4.txt", 5);
+	cout << "Test 4" << endl;
+	cout << "Correct Answer:" << endl;
+	cout << "\tmost Common word(s): \"quiet\"" << endl;
+	for (vector<string>::iterator itr = most.begin(); itr != most.end(); ++itr) {
+		cout << *itr << ", ";
+	}
+	cout << endl;
+
+	//test 5
+	most = FrequentWords("FreqWordTest5.txt", 6);
+	cout << "Test 5" << endl;
+	cout << "Correct Answer:" << endl;
+	cout << "\tmost Common word(s): \"eldest\"" << endl;
+	for (vector<string>::iterator itr = most.begin(); itr != most.end(); ++itr) {
+		cout << *itr << ", ";
+	}
+	cout << endl;
+	/*
+	//testing origin finder
+
+	//test 1
+	cout << "Possable origin Location: " << FindOrigin("DNAOrigin1.txt") << endl;
+	//test 2
+	cout << "Possable origin Location: " << FindOrigin("DNAOrigin1.txt") << endl;
+	//test 3
+	cout << "Possable origin Location: " << FindOrigin("DNAOrigin1.txt") << endl;
+	//test 4
+	cout << "Possable origin Location: " << FindOrigin("DNAOrigin1.txt") << endl;
+	//test 5
+	cout << "Possable origin Location: " << FindOrigin("DNAOrigin1.txt") << endl;
+	*/
+	}
 
 int main() {
 	cout << "starting" << endl;
@@ -129,7 +195,7 @@ int main() {
 }
 
 
-/**
-#R code
+/** R
+
 
 */

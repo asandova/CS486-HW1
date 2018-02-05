@@ -1,0 +1,10 @@
+1 Implement an algorithm for the Frequent Words Problem. 
+1.1 Write down the pseudocode on paper first. You do not have to implement a very fast algorithm at this time. Any algorithm that gives the correct results is acceptable.
+1.2 The program must be able to take an input text file and and a value k to specify the number characters in the word. The program will print the most frequent words on the screen. You must write your own computer code. 
+1.3 Implement five test cases that you know the answer. The program should print out error messages if a test cases failed. The tests should be run first before it processes any input file.
+1.4 Show the runtime as a function of the input text length. Plot the curve in R or another tool that you are familiar with.
+1.5 Write a readme file to describe how to run the code.
+2 Write a program to detect the oriC by checking the difference in frequencies of G and C. The input is a DNA string file (representing a circular genome). The output is a coordinate in the input genome that is most likely the site of oriC. 
+2.1 Please describe the pseudocode. 
+2.2 Design five test cases to check the correctness of your code.
+2.3 Write a readme file to describe how to run the code.
