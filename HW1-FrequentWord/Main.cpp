@@ -13,13 +13,15 @@
 
 using namespace std;
 
+size_t FindOrigin(string filename);
+vector<string> FrequentWords(string filename, int wordlen);
 //  [[Rcpp::export]]
 void OriginWraper(string s) {
-
+	FindOrigin(s);
 }
 //  [[Rcpp::export]]
 void FreqWrapper(string s) {
-	
+	FrequentWords(s, 3);
 }
 
 string removePunc(string str) {
@@ -129,7 +131,7 @@ void testall() {
 	vector<string> most = FrequentWords("FreqWordTest1.txt", 2);
 	cout << "Test 1" << endl;
 	cout << "Correct Answer:" << endl;
-	cout << "\tmost Common word(s): \"he\"" << endl ;
+	cout << "\tmost Common word(s): \"he\"" << endl;
 	for (vector<string>::iterator itr = most.begin(); itr != most.end(); ++itr) {
 		cout << *itr << ", ";
 	}
@@ -172,21 +174,55 @@ void testall() {
 		cout << *itr << ", ";
 	}
 	cout << endl;
-	/*
-	//testing origin finder
 
+	//testing origin finder
+	size_t location;
 	//test 1
-	cout << "Possable origin Location: " << FindOrigin("DNAOrigin1.txt") << endl;
-	//test 2
-	cout << "Possable origin Location: " << FindOrigin("DNAOrigin1.txt") << endl;
-	//test 3
-	cout << "Possable origin Location: " << FindOrigin("DNAOrigin1.txt") << endl;
-	//test 4
-	cout << "Possable origin Location: " << FindOrigin("DNAOrigin1.txt") << endl;
-	//test 5
-	cout << "Possable origin Location: " << FindOrigin("DNAOrigin1.txt") << endl;
-	*/
+	location = FindOrigin("DNAOrigin1.txt");
+	cout << "Test 1:\nPossable origin Location: " << location << endl;
+	if (location == 503) {
+		cout << "Test 1: Passed" << endl;
 	}
+	else {
+		cout << "Test 1: Failed" << endl;
+	}
+	//test 2
+	location = FindOrigin("DNAOrigin2.txt");
+	cout << "Possable origin Location: " << location << endl;
+	if (location == 0) {
+		cout << "Test 2: Passed" << endl;
+	}
+	else {
+		cout << "Test 2: Failed" << endl;
+	}
+	//test 3
+	location = FindOrigin("DNAOrigin3.txt");
+	cout << "Possable origin Location: " << location << endl;
+	if (location == 7) {
+		cout << "Test 3: Passed" << endl;
+	}
+	else {
+		cout << "Test 3: Failed" << endl;
+	}
+	//test 4
+	location = FindOrigin("DNAOrigin4.txt");
+	cout << "Possable origin Location: " << location << endl;
+	if (location == 5) {
+		cout << "Test 4: Passed" << endl;
+	}
+	else {
+		cout << "Test 4: Failed" << endl;
+	}
+	//test 5
+	location = FindOrigin("DNAOrigin5.txt");
+	cout << "Possable origin Location: " << location << endl;
+	if (location == 11) {
+		cout << "Test 5: Passed" << endl;
+	}
+	else {
+		cout << "Test 5: Failed" << endl;
+	}
+}
 
 int main() {
 	cout << "starting" << endl;
@@ -196,6 +232,12 @@ int main() {
 
 
 /** R
+freq.files <- c("FreqWordRTest1.txt","FreqWordRTest2.txt","FreqWordRTest3.txt","FreqWordRTest4.txt","FreqWordRTest5.txt")
+word.num <- c(500,600,700,800,900)
 
-
+runtime <- vector(lenght = 5)
+for(i in c(1:5)){
+	runtime[i] <- system.time( FreqWrapper(freq.files[i]) )["user.self"]
+}
+plot(word.num,runtime, type="b", xlab="word count", ylab = "runtime(seconds)")
 */
