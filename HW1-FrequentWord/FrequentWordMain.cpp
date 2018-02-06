@@ -1,21 +1,16 @@
 #include <iostream>
 #include <sstream>
-#include <stdio.h>
 #include <vector>
 #include <string>
-#include <regex>
 #include <cctype>
-#include <limits>
+#include <regex>
 #include <fstream>
 #include "strFreqSet.h"
 
-//#include <stdlib.h>
-
 using namespace std;
 
-// FindOrigin(string filename);
-//vector<string> FrequentWords(string filename, int wordlen);
-/*
+vector<string> FrequentWords(string filename, int wordlen);
+
 //  [[Rcpp::export]]
 void FreqWrapper(string s) {
 	FrequentWords(s, 3);
@@ -24,7 +19,7 @@ void FreqWrapper(string s) {
 string removePunc(string str) {
 	for (string::iterator itr = str.begin(); itr != str.end(); ++itr) {
 
-		if (*itr == '.' || *itr == '?' || *itr == '!' || *itr == '-' || *itr == ',' || *itr == '\'' ) {
+		if (*itr == '.' || *itr == '?' || *itr == '!' || *itr == '-' || *itr == ',' || *itr == '\'') {
 			string::iterator itr1 = itr;
 			if ((++itr1) == str.end()) {
 				str.erase(itr);
@@ -46,8 +41,8 @@ vector<string> StringtoWords(string str) {
 		for (size_t e = s; e < str.length(); e++) {
 			char cur = str[e];
 			if (cur == ' ') {
-				freq.push_back(str.substr(s, e - s) );
-				s = e+1;
+				freq.push_back(str.substr(s, e - s));
+				s = e + 1;
 			}
 		}
 	}
@@ -83,46 +78,7 @@ vector<string> FrequentWords(string filename, int wordlen) {
 	return frequency.mostFreq();
 }
 
-size_t FindOrigin(string filename){
-	fstream iFile;
-	string l;
-	string Lines;
-	iFile.open(filename, ifstream::in);
-	if (iFile.is_open()) {
-		while (!iFile.eof()) {
-			getline(iFile, l);
-			Lines = Lines + l;
-		}
-	}
-	iFile.close();
-
-	size_t Cnum = 0, Gnum = 0;
-	int Clow = numeric_limits<int>::max(), GHigh = numeric_limits<int>::min();
-	size_t CLowIndex = 0 , GHighIndex = 0;
-	char cur;
-	for (size_t i = 0; i < Lines.length(); i++) {
-		cur = Lines[i];
-		if (cur == 'c' || cur == 'C') {
-			Cnum++;
-		}
-		else if (cur == 'g' || cur == 'G') {
-			Gnum++;
-		}
-		int GCDif = (int)Gnum - (int)Cnum;
-		if (GCDif < Clow) {
-			Clow = (int)Gnum - (int)Cnum;
-			CLowIndex = i;
-		}
-		else if (GCDif > GHigh ) {
-			GHigh = (int)Gnum - (int)Cnum;
-			GHighIndex = i;
-		}
-	}
-	return CLowIndex;
-}*/
-/*
 void testall() {
-
 	//testiing Word Frequency
 	//test 1;
 	vector<string> most = FrequentWords("FreqWordTest1.txt", 2);
@@ -172,61 +128,12 @@ void testall() {
 	}
 	cout << endl;
 
-	//testing origin finder
-	size_t location;
-	//test 1
-	location = FindOrigin("DNAOrigin1.txt");
-	cout << "Test 1:\nPossable origin Location: " << location << endl;
-	if (location == 503) {
-		cout << "Test 1: Passed" << endl;
-	}
-	else {
-		cout << "Test 1: Failed" << endl;
-	}
-	//test 2
-	location = FindOrigin("DNAOrigin2.txt");
-	cout << "Possable origin Location: " << location << endl;
-	if (location == 0) {
-		cout << "Test 2: Passed" << endl;
-	}
-	else {
-		cout << "Test 2: Failed" << endl;
-	}
-	//test 3
-	location = FindOrigin("DNAOrigin3.txt");
-	cout << "Possable origin Location: " << location << endl;
-	if (location == 7) {
-		cout << "Test 3: Passed" << endl;
-	}
-	else {
-		cout << "Test 3: Failed" << endl;
-	}
-	//test 4
-	location = FindOrigin("DNAOrigin4.txt");
-	cout << "Possable origin Location: " << location << endl;
-	if (location == 5) {
-		cout << "Test 4: Passed" << endl;
-	}
-	else {
-		cout << "Test 4: Failed" << endl;
-	}
-	//test 5
-	location = FindOrigin("DNAOrigin5.txt");
-	cout << "Possable origin Location: " << location << endl;
-	if (location == 11) {
-		cout << "Test 5: Passed" << endl;
-	}
-	else {
-		cout << "Test 5: Failed" << endl;
-	}
-}*/
+}
 /*
 int main() {
-	cout << "starting" << endl;
 	testall();
-	return 0;
-}*/
-
+}
+*/
 
 /** R
 freq.files <- c("FreqWordRTest1.txt","FreqWordRTest2.txt","FreqWordRTest3.txt","FreqWordRTest4.txt","FreqWordRTest5.txt")
@@ -234,7 +141,7 @@ word.num <- c(500,600,700,800,900)
 
 runtime <- vector(lenght = 5)
 for(i in c(1:5)){
-	runtime[i] <- system.time( FreqWrapper(freq.files[i]) )["user.self"]
+runtime[i] <- system.time( FreqWrapper(freq.files[i]) )["user.self"]
 }
 plot(word.num,runtime, type="b", xlab="word count", ylab = "runtime(seconds)")
 */
