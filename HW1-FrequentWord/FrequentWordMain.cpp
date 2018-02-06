@@ -1,11 +1,15 @@
 #include <iostream>
 #include <sstream>
+#include <stdio.h>
 #include <vector>
 #include <string>
-#include <cctype>
 #include <regex>
+#include <cctype>
+#include <limits>
 #include <fstream>
 #include "strFreqSet.h"
+
+
 
 using namespace std;
 
@@ -86,7 +90,13 @@ void testall() {
 	cout << "Correct Answer:" << endl;
 	cout << "\tmost Common word(s): \"he\"" << endl;
 	for (vector<string>::iterator itr = most.begin(); itr != most.end(); ++itr) {
-		cout << *itr << ", ";
+		vector<string>::iterator itr1 = itr;
+		if (++itr1 == most.end()) {
+			cout << *itr << endl;
+		}
+		else {
+			cout << *itr << ", ";
+		}
 	}
 	cout << endl;
 
@@ -96,7 +106,13 @@ void testall() {
 	cout << "Correct Answer:" << endl;
 	cout << "\tmost Common word(s): \"the\"" << endl;
 	for (vector<string>::iterator itr = most.begin(); itr != most.end(); ++itr) {
-		cout << *itr << ", ";
+		vector<string>::iterator itr1 = itr;
+		if (++itr1 == most.end()) {
+			cout << *itr << endl;
+		}
+		else {
+			cout << *itr << ", ";
+		}
 	}
 	cout << endl;
 	//test 3
@@ -105,7 +121,13 @@ void testall() {
 	cout << "Correct Answer:" << endl;
 	cout << "\tmost Common word(s): \"loud\"" << endl;
 	for (vector<string>::iterator itr = most.begin(); itr != most.end(); ++itr) {
-		cout << *itr << ", ";
+		vector<string>::iterator itr1 = itr;
+		if (++itr1 == most.end()) {
+			cout << *itr << endl;
+		}
+		else {
+			cout << *itr << ", ";
+		}
 	}
 	cout << endl;
 	//test 4
@@ -114,7 +136,13 @@ void testall() {
 	cout << "Correct Answer:" << endl;
 	cout << "\tmost Common word(s): \"quiet\"" << endl;
 	for (vector<string>::iterator itr = most.begin(); itr != most.end(); ++itr) {
-		cout << *itr << ", ";
+		vector<string>::iterator itr1 = itr;
+		if (++itr1 == most.end()) {
+			cout << *itr << endl;
+		}
+		else {
+			cout << *itr << ", ";
+		}
 	}
 	cout << endl;
 
@@ -124,16 +152,22 @@ void testall() {
 	cout << "Correct Answer:" << endl;
 	cout << "\tmost Common word(s): \"eldest\"" << endl;
 	for (vector<string>::iterator itr = most.begin(); itr != most.end(); ++itr) {
-		cout << *itr << ", ";
+		vector<string>::iterator itr1 = itr;
+		if (++itr1 == most.end()) {
+			cout << *itr << endl;
+		}
+		else {
+			cout << *itr << ", ";
+		}
 	}
 	cout << endl;
 
 }
-/*
 int main() {
 	testall();
+	return 0;
 }
-*/
+
 
 /** R
 freq.files <- c("FreqWordRTest1.txt","FreqWordRTest2.txt","FreqWordRTest3.txt","FreqWordRTest4.txt","FreqWordRTest5.txt")

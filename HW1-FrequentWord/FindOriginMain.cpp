@@ -1,7 +1,10 @@
 #include <iostream>
+#include <sstream>
 #include <stdio.h>
 #include <vector>
 #include <string>
+#include <regex>
+#include <cctype>
 #include <limits>
 #include <fstream>
 
@@ -96,8 +99,8 @@ void testall() {
 		cout << "Test 5: Failed" << endl;
 	}
 }
-*/
-/*
+
+
 int main() {
 	testall();
 	return 0;
